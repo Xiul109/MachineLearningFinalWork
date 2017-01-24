@@ -56,6 +56,9 @@ cleaned_data = work_data
 
 superclean_data = cleaned_data.dropna()
 
+#Data dimension reduction
+superclean_data = superclean_data.sample(frac=0.5)
+
 #Escritura fichero
 csv_file_superClean=superclean_data.to_csv(index=False,float_format="%f")
 

@@ -8,7 +8,6 @@ from sklearn import metrics
 
 all_data = pd.read_csv('super_clean.csv', sep=',',encoding='Latin1')
 
-all_data = all_data.sample(frac=0.1)
 print (all_data['price'].size)
 
 numpyData=np.array([all_data['price'],all_data['kilometer'],all_data['antiguedad']]).T
@@ -16,7 +15,6 @@ numpyData=np.array([all_data['price'],all_data['kilometer'],all_data['antiguedad
 min_max_scaler = preprocessing.MinMaxScaler()
 numpyData = min_max_scaler.fit_transform(numpyData)
 
-db=DBSCAN(eps=0.014,min_samples=8,metric='euclidean')
+db=DBSCAN(eps=0.015,min_samples=8,metric='euclidean')
 ydb=db.fit_predict(numpyData)
 print (max(ydb))
-print (metrics.silhouette_score(numpyData, ydb))
