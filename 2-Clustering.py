@@ -24,3 +24,18 @@ print("Clusters "+str(nClusters))
 clusters=[all_data[all_data['cluster'].isin([i])] for i in range(nClusters+1)]
 
 print(clusters[0])
+
+df=pd.DataFrame(columns=('cluster','ncars','meanPowerPS','diferentModels','diferentBrand','diferentCarType','monthsMean','priceMean','kilometerMean'))
+
+for i in range(nClusters+1):
+	c=clusters[i]
+	count=c['cluster'].count()
+	meanPowerPS=c['powerPS'].mean()
+	diferentModels=len(c['model'].unique())
+	diferentBrand=len(c['brand'].unique())
+	diferentCarType=len(c['vehicleType'].unique())
+	monthsMean=c['antiguedad'].mean()
+	priceMean=c['price'].mean()
+	kilometerMean=c['kilometer'].mean()
+	df.loc[i]=[i,count,meanPowerPS,diferentModels,diferentBrand,diferentCarType,monthsMean,priceMean,kilometerMean]
+print (df)
