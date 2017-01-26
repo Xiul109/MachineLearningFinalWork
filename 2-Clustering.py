@@ -8,7 +8,7 @@ from sklearn import metrics
 
 all_data = pd.read_csv('super_clean.csv', sep=',',encoding='Latin1')
 
-print (all_data['price'].size)
+print(all_data['price'].size)
 
 numpyData=np.array([all_data['price'],all_data['kilometer'],all_data['antiguedad']]).T
 
@@ -17,4 +17,10 @@ numpyData = min_max_scaler.fit_transform(numpyData)
 
 db=DBSCAN(eps=0.015,min_samples=8,metric='euclidean')
 ydb=db.fit_predict(numpyData)
-print (max(ydb))
+all_data['cluster']=ydb
+nClusters=max(ydb)
+print("Clusters "+str(nClusters))
+
+clusters=[all_data[all_data['cluster'].isin([i])] for i in range(nClusters+1)]
+
+print(clusters[0])
