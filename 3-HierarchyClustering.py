@@ -24,7 +24,7 @@ numpyData = min_max_scaler.fit_transform(numpyData)
 #methods=['complete', 'average', 'weighted','single','ward','median','centroid']
 metric='euclidean'
 method='complete'
-threshold=5
+threshold=5.5
 
 dist = sklearn.neighbors.DistanceMetric.get_metric(metric)
 matsim = dist.pairwise(numpyData)
@@ -38,7 +38,27 @@ plt.show()
 
 clusters=cluster.hierarchy.fcluster(clusters,threshold,criterion='distance')
 
-
 for i in range(len(data)):
 	data[i].append(clusters[i])
 
+colPrice=fields.index('priceMean')
+colKm=fields.index('kilometerMean')
+colMonth=fields.index('monthsMean')
+
+for i in range(min(clusters),max(clusters)+1):
+	count=0
+	price=0
+	months=0
+	km=0
+	for d in data:
+		if d[-1]==i:
+			count+=1
+			price+=float(d[colPrice])
+			months+=float(d[colMonth])
+			km+=float(d[colKm])
+	print(i,price/count,km/count,months/count)
+
+data.insert(0,fields+['gama'])
+with open(sys.argv[2],'w') as f:
+	writer=csv.writer(f,fields+['gama'])
+	writer.writerows(data)
