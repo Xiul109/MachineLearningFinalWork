@@ -23,7 +23,7 @@ print("Clusters "+str(nClusters))
 
 clusters=[all_data[all_data['cluster'].isin([i])] for i in range(nClusters+1)]
 
-df=pd.DataFrame(columns=('cluster','ncars','meanPowerPS','diferentModels','diferentBrand','monthsMean','priceMean','kilometerMean','nBenzin','nCng','nDiesel','nHybrid','nElektro','nLpg','nAndere','nBus','nCabrio','nCoupe','nKleinwagen','nSuv','nKombi','nLimousine'))
+df=pd.DataFrame(columns=('cluster','ncars','meanPowerPS','diferentModels','diferentBrand','monthsMean','priceMean','kilometerMean','nBrokenCars','nBenzin','nCng','nDiesel','nHybrid','nElektro','nLpg','nAndere','nBus','nCabrio','nCoupe','nKleinwagen','nSuv','nKombi','nLimousine'))
 
 for i in range(nClusters+1):
 	c=clusters[i]
@@ -34,11 +34,15 @@ for i in range(nClusters+1):
 	monthsMean=c['antiguedad'].mean()
 	priceMean=c['price'].mean()
 	kilometerMean=c['kilometer'].mean()
+	try:
+		nBrokenCars=c.groupby('notRepairedDamage').size()['ja']/count
+	except KeyError:
+		nBrokenCars=0
 	#FuelTypes
 	types=c.groupby('fuelType').size()
 	def getN(fType):
 		try:
-			return types[fType]
+			return types[fType]/count
 		except KeyError:
 			return 0
 	nFuelTypes=[getN('benzin'),getN('cng'),getN('diesel'),getN('hybrid'),getN('elektro'),getN('lpg')]
@@ -46,7 +50,7 @@ for i in range(nClusters+1):
 	types=c.groupby('vehicleType').size()
 	nVehicleTypes=[getN('andere'),getN('bus'),getN('cabrio'),getN('coupe'),getN('kleinwagen'),getN('suv'),getN('kombi'),getN('limousine')]
 	
-	df.loc[i]=[i,count,meanPowerPS,diferentModels,diferentBrand,monthsMean,priceMean,kilometerMean]+nFuelTypes+nVehicleTypes
+	df.loc[i]=[i,count,meanPowerPS,diferentModels,diferentBrand,monthsMean,priceMean,kilometerMean,nBrokenCars]+nFuelTypes+nVehicleTypes
 csv_file=df.to_csv(index=False)
 
 fileout=open('clusters.csv','w')
