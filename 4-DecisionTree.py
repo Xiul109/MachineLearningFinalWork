@@ -1,6 +1,6 @@
 import sys
 import csv
-import pydot
+import pydotplus
 import numpy as np
 import pandas as pd
 from sklearn import tree
@@ -26,7 +26,7 @@ for c in campos:
 #Decision Tree Training
 notRD=data['notRepairedDamage']
 data=data.drop('notRepairedDamage',1)
-treeClas=tree.DecisionTreeClassifier()
+treeClas=tree.DecisionTreeClassifier(max_depth=10)
 treeClas.fit(data, notRD)
 
 #Decision Tree Plot
@@ -34,5 +34,5 @@ dot_data = StringIO()
 
 tree.export_graphviz(treeClas, out_file=dot_data,feature_names=list(data),class_names=['ja', 'nein'],filled=True, rounded=True, special_characters=True)
 
-graph = pydot.graph_from_dot_data(dot_data.getvalue())
+graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
 graph.write_pdf(path=sys.argv[2])
