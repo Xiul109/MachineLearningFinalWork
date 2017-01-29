@@ -1,3 +1,4 @@
+#imports
 import sys
 import csv
 import pydotplus
@@ -7,10 +8,12 @@ from sklearn import tree
 from sklearn import preprocessing
 from sklearn.externals.six import StringIO
 
+#Aruments management
 if(len(sys.argv) is not 3):
 	print("Usage: python3 E14.py <input_file> <pdf_file>")
 	exit()
 
+#File reading
 data=pd.read_csv(sys.argv[1], sep=',',encoding='Latin1')
 
 #Encoder
