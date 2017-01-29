@@ -26,7 +26,7 @@ for c in campos:
 #Decision Tree Training
 notRD=data['notRepairedDamage']
 data=data.drop('notRepairedDamage',1)
-treeClas=tree.DecisionTreeClassifier(max_depth=10)
+treeClas=tree.DecisionTreeClassifier(min_impurity_split=0.12,max_depth=7)
 treeClas.fit(data, notRD)
 
 #Decision Tree Plot

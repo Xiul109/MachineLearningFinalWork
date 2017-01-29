@@ -41,22 +41,28 @@ clusters=cluster.hierarchy.fcluster(clusters,threshold,criterion='distance')
 for i in range(len(data)):
 	data[i].append(clusters[i])
 
+colNCars=fields.index('ncars')
 colPrice=fields.index('priceMean')
 colKm=fields.index('kilometerMean')
 colMonth=fields.index('monthsMean')
+colDamages=fields.index('nBrokenCars')
 
 for i in range(min(clusters),max(clusters)+1):
 	count=0
 	price=0
 	months=0
 	km=0
+	broken=0
+	ncars=0
 	for d in data:
 		if d[-1]==i:
 			count+=1
 			price+=float(d[colPrice])
 			months+=float(d[colMonth])
 			km+=float(d[colKm])
-	print(i,price/count,km/count,months/count)
+			ncars+=float(d[colNCars])
+			broken+=float(d[colDamages])*float(d[colNCars])
+	print(i,price/count,km/count,months/count, broken/ncars)
 
 data.insert(0,fields+['gama'])
 with open(sys.argv[2],'w') as f:
