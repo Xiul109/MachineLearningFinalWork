@@ -3,9 +3,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
-all_data = pd.read_csv('autos.csv', sep=',',encoding='Latin1')
+import sys
 
-#Preproceso
+if(len(sys.argv) is not 4):
+	print("Usage:   python3 1-DataCleaning.py <input_file> <output_file> <%file reduction [0-1]>")
+	print("Example: python3 1-DataCleaning.py autos.csv output_file.csv 0.5")
+	exit()
+
+all_data = pd.read_csv(sys.argv[1], sep=',',encoding='Latin1')
+
+#Preprocessing
 work_data=all_data.drop('nrOfPictures',1)
 work_data=work_data.drop('abtest',1)
 work_data=work_data.drop('dateCreated',1)
@@ -20,7 +27,7 @@ work_data=work_data.drop('seller',1)
 work_data = work_data[work_data.offerType != 'Gesuch']
 work_data=work_data.drop('offerType',1)
 
-#Creando campo antigüedad
+#Creating field antiguedad
 aux=pd.DataFrame()
 aux['months']=work_data['lastSeen'].str.split('-',expand=True)[1].astype(int)-work_data['monthOfRegistration']
 aux['years']=work_data['lastSeen'].str.split('-',expand=True)[0].astype(int)-work_data['yearOfRegistration']
@@ -57,14 +64,10 @@ cleaned_data = work_data
 superclean_data = cleaned_data.dropna()
 
 #Data dimension reduction
-superclean_data = superclean_data.sample(frac=0.5)
+superclean_data = superclean_data.sample(frac=float(sys.argv[3]))
 
-#Escritura fichero
+#Writing file
 csv_file_superClean=superclean_data.to_csv(index=False,float_format="%f")
 
-fileout=open('super_clean.csv','w')
+fileout=open(sys.argv[2],'w')
 fileout.write(csv_file_superClean)
-
-
-
-
