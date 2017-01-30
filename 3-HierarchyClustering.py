@@ -61,7 +61,7 @@ for i in range(min(clusters),max(clusters)+1):
 	print(i,price/count,km/count,months/count, broken/ncars)
 
 #Writing file
-data.insert(0,fields+['gama'])
+data.insert(0,fields+['group'])
 with open(sys.argv[2],'w') as f:
-	writer=csv.writer(f,fields+['gama'])
+	writer=csv.writer(f,fields+['group'])
 	writer.writerows(data)
