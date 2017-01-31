@@ -7,6 +7,19 @@ import pandas as pd
 from sklearn import tree
 from sklearn import preprocessing
 from sklearn.externals.six import StringIO
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+
+def plot_confusion_matrix(cm, y_true, y_pred, title='Confusion matrix', cmap=plt.cm.Blues):
+	plt.imshow(cm, interpolation='nearest', cmap=cmap)
+	plt.title(title)
+	plt.colorbar()
+	tick_marks = np.arange(len(set(y_true)))
+	plt.xticks(tick_marks, set(y_pred), rotation=45)
+	plt.yticks(tick_marks, set(y_true))
+	plt.tight_layout()
+	plt.ylabel('True label')
+	plt.xlabel('Predicted label')
 
 #Aruments management
 if(len(sys.argv) is not 3):
@@ -27,15 +40,29 @@ for c in campos:
 
 
 #Decision Tree Training
+max_depth=7
 notRD=data['notRepairedDamage']
 data=data.drop('notRepairedDamage',1)
-treeClas=tree.DecisionTreeClassifier(min_impurity_split=0.12,max_depth=7)
+treeClas=tree.DecisionTreeClassifier(max_depth=max_depth)
 treeClas.fit(data, notRD)
 
-#Decision Tree Plot
-dot_data = StringIO()
+yP=treeClas.predict(data)
 
-tree.export_graphviz(treeClas, out_file=dot_data,feature_names=list(data),class_names=['ja', 'nein'],filled=True, rounded=True, special_characters=True)
+#Confusion Matrix compute
+cm = confusion_matrix(y_true=notRD, y_pred=yP)
 
-graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
-graph.write_pdf(path=sys.argv[2])
+#Confusion matrix plot
+print(cm)
+plot_confusion_matrix(cm, notRD,yP)
+plt.show()
+
+#Decision Tree Plot if it isn't to big
+if max_depth==None || max_depth>10
+	print("Tree to big to be plotted")
+else
+	dot_data = StringIO()
+
+	tree.export_graphviz(treeClas, out_file=dot_data,feature_names=list(data),class_names=['ja', 'nein'],filled=True, rounded=True, special_characters=True)
+
+	graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+	graph.write_pdf(path=sys.argv[2])
